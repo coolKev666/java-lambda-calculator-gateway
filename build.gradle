@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.1'
+}
+
+jar {
+    archiveBaseName = 'lambda-calculator'
+    archiveVersion = '1.0.0'
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+    archiveFileName = 'lambda-calculator.zip'
+}
+
+build.dependsOn buildZip
