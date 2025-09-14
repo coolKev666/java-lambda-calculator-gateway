@@ -38,25 +38,59 @@ A simple calculator API built with AWS Lambda and API Gateway supporting basic a
 - `"multiply"` - Multiplication
 - `"divide"` - Division
 
-## Build & Deploy
+## Local Development & Testing
+
+### Prerequisites
+- Java 21+
+- Docker Desktop
+- AWS SAM CLI: `brew install aws-sam-cli`
+
+### Run Locally
 
 1. **Build the project**:
    ```bash
-   ./gradlew build
+   gradle buildZip
    ```
 
-2. **Create deployment package**:
+2. **Start local API**:
    ```bash
-   ./gradlew buildZip
+   sam local start-api
+   ```
+   This starts a local server at `http://127.0.0.1:3000`
+
+3. **Test locally**:
+   ```bash
+   # Addition
+   curl -X POST http://127.0.0.1:3000/calculate \
+     -H "Content-Type: application/json" \
+     -d '{"a": 10, "b": 5, "operation": "add"}'
+   
+   # Division
+   curl -X POST http://127.0.0.1:3000/calculate \
+     -H "Content-Type: application/json" \
+     -d '{"a": 20, "b": 4, "operation": "divide"}'
    ```
 
-3. **Deploy to AWS Lambda**:
+4. **Run unit tests**:
+   ```bash
+   gradle test
+   ```
+
+## AWS Deployment
+
+1. **Create deployment package**:
+   ```bash
+   gradle buildZip
+   ```
+
+2. **Deploy to AWS Lambda**:
    - Upload `build/distributions/lambda-calculator.zip`
    - Set handler: `com.example.calculator.CalculatorHandler::handleRequest`
-   - Configure API Gateway trigger
+   - Configure API Gateway trigger with Lambda Proxy Integration
 
 ## Prerequisites
 
 - Java 21+
+- Docker Desktop (for local testing)
 - AWS CLI configured
 - AWS Lambda and API Gateway permissions

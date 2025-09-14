@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  CalculatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/lambda-calculator.zip
+      Handler: com.example.calculator.CalculatorHandler::handleRequest
+      Runtime: java21
+      Events:
+        CalculateApi:
+          Type: Api
+          Properties:
+            Path: /calculate
+            Method: post
